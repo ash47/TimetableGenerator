@@ -1,0 +1,178 @@
+/*
+BLU: 1eafd5
+RED: ee3378
+PUR: 72408d
+GRE: c3f84b
+*/
+
+table {
+    empty-cells: show;
+}
+
+td {
+	white-space: nowrap;
+}
+
+.fill {
+	width: 100%
+}
+
+/* The stream selector box */
+.streamSelect {
+	margin-left:8px;
+}
+
+#browseControls {
+	margin-top:20px;
+}
+
+#subjectTable td {
+	padding-right:8px;
+}
+
+/* The list of subject activities holder */
+.subList {
+	padding-left:16px;
+}
+
+.test {
+	background-color:#1eafd5;
+	color:#FFF;
+}
+
+#subjectYear {
+	width:40px;
+}
+
+.bTop {
+	border-top:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	padding:4px;
+	padding-bottom:3px;
+	
+	max-width:160px;
+	overflow:hidden;
+}
+.bTopClash {
+	border-top:4px solid #F00;
+	border-left:4px solid #F00;
+	border-right:4px solid #F00;
+	padding:4px;
+	padding-bottom:0px;
+	
+	max-width:160px;
+	overflow:hidden;
+}
+
+.bBot {
+	border-bottom:1px solid #000;
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	padding:4px;
+	padding-top:3px;
+	
+	max-width:160px;
+	overflow:hidden;
+}
+.bBotClash {
+	border-bottom:4px solid #F00;
+	border-left:4px solid #F00;
+	border-right:4px solid #F00;
+	padding:4px;
+	padding-top:0px;
+	
+	background-color:#fee;
+	
+	max-width:160px;
+	overflow:hidden;
+}
+
+.bLR {
+	border-left:1px solid #000;
+	border-right:1px solid #000;
+	padding:4px;
+	
+	max-width:160px;
+	overflow:hidden;
+}
+.bLRClash {
+	border-left:4px solid #F00;
+	border-right:4px solid #F00;
+	padding:4px;
+	
+	background-color:#fee;
+	
+	max-width:160px;
+	overflow:hidden;
+}
+
+.lTime {
+	margin-bottom:7.5px;
+	padding-right:8px;
+	text-align:right;
+}
+
+.llTime {
+	color:#BBB;
+	margin-bottom:8.25px;
+	padding-right:8px;
+	text-align:right;
+}
+
+.leftBar {
+	vertical-align:top;
+	padding-top:28px;
+	overflow:hidden;
+}
+
+.line {
+	border-top:1px solid #e6e6e6;
+	padding:4px;
+	padding-bottom:3px;
+}
+
+.tDay {
+	padding:8px;
+	padding-bottom:12px;
+}
+
+.tDayFadded {
+	padding:8px;
+	padding-bottom:12px;
+	color:#BBB;
+}
+
+#printable {
+	/*float:right;*/
+	width:100%;
+}
+
+#timetable {
+	float:left;
+}
+
+#sorter {
+	margin-left:40px;
+	float:left;
+	text-align:center;
+}
+
+#sorter ul {
+	list-style:none;
+	padding:0px;
+}
+
+#sorter li {
+	padding:4px;
+	border:1px solid #000;
+	width:180;
+	margin-bottom:4px;
+	text-align:left;
+}
+
+#slideContainer {
+	width:620px;
+	margin-left:20px;
+}
+
