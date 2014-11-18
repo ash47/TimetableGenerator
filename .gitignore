@@ -216,6 +216,3 @@ pip-log.txt
 
 #Timetable stuff
 static/timetable/*
-
-# Modules, sigh
-node_modules/*

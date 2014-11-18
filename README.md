@@ -11,5 +11,12 @@ Timetable Generator
  - The timetable generator will allow you to remove classes you can't / don't want to attend, it offers a printable version (Make sure to turn background colors on, otherwise it looks plain)
  - You can also filter timetables by finishing time, number of clashes, and many other things, you can change ascending and descending using the arrows on the filters.
 
+###Setup###
+ - You need to INSTALL node.js
+ - You will need to install the modules to make this run
+ - To do this simply open a command window to the root folder
+ - Type "npm install" into the console / command window, this will install all the modules required to run this program
+ - npm is a package manager that comes with node.js
+
 ###Icons###
  - Most of the icons are silk icons, which can be found [here] (http://www.famfamfam.com/lab/icons/silk/)
