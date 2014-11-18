@@ -4,7 +4,7 @@ Timetable Generator
 ###About###
  - This is a timetable generator I wrote to learn javascript, so it has a lot of bad code in it!
  - You need to use node.js to run this, see Run.bat, this may work on Linux / Mac -- you will probably need to download the linux / mac modules though.
- - By default, this will run on port 1337, so visit: localhost:1337 to access the timetable generator.
+ - By default, this will run on port 3000, so visit: localhost:3000 to access the timetable generator.
 
  - This allows you to browse possible timetable options for each class, if your class isn't in the suggested list of classes, simply enter the subject code and press 'Find' and it will attempt to download the latest timetable data for that subject
  - Timetable data is cached, once downloaded, it won't ever update, if you want it to update, you need to delete the cache in `static/timetable`

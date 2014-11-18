@@ -162,9 +162,8 @@ function GetTimetable(code, yr, callback, errorCallback) {
 // Create the web server:
 var app = express();
 
-app.configure(function() {
-	app.use(express.static(__dirname + '/static'));
-});
+// Setup static dir
+app.use(express.static(__dirname + '/static'));
 
 // Index page:
 app.get('/', function (req, res) {
@@ -232,4 +231,6 @@ app.get('/timetable/:year/:code.json', function (req, res) {
 });
 
 // Start listening:
-app.listen(process.env.PORT || 1337);
+app.listen(process.env.PORT || 3000, function() {
+    console.log('Listening on port '+(process.env.PORT || 3000)+', goto http://localhost:'+(process.env.PORT || 3000)+' in your web browser.');
+});
