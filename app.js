@@ -4,6 +4,9 @@ var fs = require('fs');
 var https = require('https');
 var querystring = require('querystring');
 
+// Jquery stuff
+var cheerio = require('cheerio');
+
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
 
 // Create directories:
@@ -31,132 +34,253 @@ function GetTimetable(code, yr, callback, errorCallback) {
 		return true;
 	}
 
-	var post_data = querystring.stringify({
-		scodes: code,
-		year: parseInt(yr),
-		sortby: 'act'
-	});
-
-	var options = {
-		hostname: 'sis.unimelb.edu.au',
-		path: '/cgi-bin/subjects.pl',
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/x-www-form-urlencoded',
-			'Content-Length': post_data.length
-		}
-	};
-
 	var html_data = '';
-	var req = https.request(options, function(res) {
-		res.on('data', function(d) {
-			html_data+=d;
-		});
+	var req;
 
-		res.on('end', function() {
-			// for error callback:
-			var foundData = false;
 
-			// Process the data:
-			var count = html_data.split('<h2>Year:').length - 1;
+    if(yr < 2015) {
+        var post_data = querystring.stringify({
+            scodes: code,
+            year: parseInt(yr),
+            sortby: 'act'
+        });
 
-			// Did we fail:
-			if(count <= 0) {
-				// No results found:
-				if(errorCallback) {
-					errorCallback('Failed to find subject!');
-					return false;
-				}
-			}
+        var options = {
+            hostname: 'sis.unimelb.edu.au',
+            path: '/cgi-bin/subjects.pl',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Length': post_data.length
+            }
+        };
 
-			var result = new Array();
+        req = https.request(options, function(res) {
+    		res.on('data', function(d) {
+    			html_data+=d;
+    		});
 
-			// Process results:
-			var pos = 0;
-			for(var i=0;i<count;i++) {
-				pos = html_data.indexOf('<h2>Year:', pos);
-				var end = html_data.indexOf('</table>', pos);
-				var d = html_data.substr(pos, end-pos);
+    		res.on('end', function() {
+    			// for error callback:
+    			var foundData = false;
 
-				// Grab the subject name:
-				var a = d.indexOf(code)+code.length+1;
-				var name = d.substr(a, d.indexOf('</b>')-a);
-				a = name.indexOf(')');
+    			// Process the data:
+    			var count = html_data.split('<h2>Year:').length - 1;
 
-				// Remove bracket:
-				if(a != -1) {
-					name = name.substr(a+2);
-				}
+    			// Did we fail:
+    			if(count <= 0) {
+    				// No results found:
+    				if(errorCallback) {
+    					errorCallback('Failed to find subject!');
+    					return false;
+    				}
+    			}
 
-				// Workout which year the data is from:
-				var a = d.indexOf(' &nbsp; ')+8;
-				var year = d.substr(10, d.indexOf(' &nbsp;')-10);
-				var semester = d.substr(a, d.indexOf('</h2>')-a);
+    			var result = new Array();
 
-				// Chop down the data:
-				d = d.substr(d.indexOf('<tr>'), d.length);
-				d = d.split('</tr>');
+    			// Process results:
+    			var pos = 0;
+    			for(var i=0;i<count;i++) {
+    				pos = html_data.indexOf('<h2>Year:', pos);
+    				var end = html_data.indexOf('</table>', pos);
+    				var d = html_data.substr(pos, end-pos);
 
-				var data = new Array();
+    				// Grab the subject name:
+    				var a = d.indexOf(code)+code.length+1;
+    				var name = d.substr(a, d.indexOf('</b>')-a);
+    				a = name.indexOf(')');
 
-				// Process data:
-				for(var j=0;j<d.length-1;j++) {
-					// Temp data array:
-					var dta = new Array()
+    				// Remove bracket:
+    				if(a != -1) {
+    					name = name.substr(a+2);
+    				}
 
-					// Split our string:
-					var dd = d[j].split('</td>');
+    				// Workout which year the data is from:
+    				var a = d.indexOf(' &nbsp; ')+8;
+    				var year = d.substr(10, d.indexOf(' &nbsp;')-10);
+    				var semester = d.substr(a, d.indexOf('</h2>')-a);
 
-					// Process our string:
-					for(var k=2;k<dd.length-1;k++) {
-						dta.push(dd[k].substr(4));
-					}
+    				// Chop down the data:
+    				d = d.substr(d.indexOf('<tr>'), d.length);
+    				d = d.split('</tr>');
 
-					// Fix class length:
-					dta[4] = parseFloat(dta[4]);
+    				var data = new Array();
 
-					// Store dta:
-					data.push(dta);
-				}
+    				// Process data:
+    				for(var j=0;j<d.length-1;j++) {
+    					// Temp data array:
+    					var dta = new Array()
 
-				// Push the data on:
-				result.push({
-					sem:semester,
-					data:data
-				});
+    					// Split our string:
+    					var dd = d[j].split('</td>');
 
-				// Move pos forward:
-				pos += 1;
-			}
+    					// Process our string:
+    					for(var k=2;k<dd.length-1;k++) {
+    						dta.push(dd[k].substr(4));
+    					}
 
-			// Ensure directories exist:
-			if(!fs.existsSync('static/timetable/'+year)) {
-				fs.mkdirSync('static/timetable/'+year);
-			}
+    					// Fix class length:
+    					dta[4] = parseFloat(dta[4]);
 
-			var fin = JSON.stringify({name:name,code:code,year:year,data:result});
+    					// Store dta:
+    					data.push(dta);
+    				}
 
-			// Store the results:
-			fs.writeFile('static/timetable/'+year+'/'+code+'.json', fin, function(err) {
-				if(err) {
-					console.log(err);
-				}
-			});
+    				// Push the data on:
+    				result.push({
+    					sem:semester,
+    					data:data
+    				});
 
-			callback(fin);
-		});
-	});
-	req.write(post_data);
-	req.end();
+    				// Move pos forward:
+    				pos += 1;
+    			}
 
-	req.on('error', function(e) {
-		console.log(e);
+    			// Ensure directories exist:
+    			if(!fs.existsSync('static/timetable/'+year)) {
+    				fs.mkdirSync('static/timetable/'+year);
+    			}
 
-		if(errorCallback) {
-			errorCallback('request error');
-			return false;
-		}
-	});
+    			var fin = JSON.stringify({name:name,code:code,year:year,data:result});
+
+    			// Store the results:
+    			fs.writeFile('static/timetable/'+year+'/'+code+'.json', fin, function(err) {
+    				if(err) {
+    					console.log(err);
+    				}
+    			});
+
+    			callback(fin);
+    		});
+    	});
+    	req.write(post_data);
+    } else {
+        // WHY YOU CHANGE FORMAT FOR 2015?!?
+
+        var options = {
+            hostname: 'sws.unimelb.edu.au',
+            path: '/2015/Reports/List.aspx?objects=' + code + '&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',
+            method: 'GET'
+        };
+
+        req = https.request(options, function(res) {
+            res.on('data', function(d) {
+                html_data+=d;
+            });
+
+            res.on('end', function() {
+                console.log('End');
+
+                // Prepare cheerio
+                var $ = cheerio.load(html_data);
+
+                // Pull subject name
+                var subjectTitleData = $('div[data-role="collapsible"] h3').html();
+
+                if(subjectTitleData != null) {
+                    // Grab the subject title
+                    var subjectTitle = subjectTitleData.split('&#xA0;-&#xA0;')[1].split('\n')[0];
+
+                    var semesterData = [];
+
+                    $('table[class="cyon_table"]').each(function(tableIndex, table) {
+                        console.log('yes');
+
+                        $('tr', table).each(function(trIndex, tr) {
+                            var classInfo = $('td:nth-child(1)', tr).text().split('/');
+                            if(classInfo.length != 6) return;
+                            //var description = $('td:nth-child(2)', tr).text();
+
+                            var startInfo = $('td:nth-child(4)', tr).text().split(':');
+                            var start = '';
+                            if(parseInt(startInfo[0]) >= 12) {
+                                if(startInfo[0] == '12') {
+                                    start = startInfo[0] + ':' + startInfo[1] + 'pm';
+                                } else {
+                                    start = (parseInt(startInfo[0])-12) + ':' + startInfo[1] + 'pm';
+                                }
+                            } else {
+                                start = startInfo[0] + ':' + startInfo[1] + 'am';
+                            }
+                            var finishInfo = $('td:nth-child(5)', tr).text().split(':');
+                            var finish = '';
+                            if(parseInt(finishInfo[0]) >= 12) {
+                                if(finishInfo[0] == '12') {
+                                    finish = finishInfo[0] + ':' + finishInfo[1] + 'pm';
+                                } else {
+                                    finish = (parseInt(finishInfo[0])-12) + ':' + finishInfo[1] + 'pm';
+                                }
+                            } else {
+                                finish = finishInfo[0] + ':' + finishInfo[1] + 'am';
+                            }
+                            var durationInfo = $('td:nth-child(6)', tr).text();
+
+
+
+                            //var code = classInfo[0];
+                            var semester = classInfo[3];
+
+                            // Things we store
+                            var classType = classInfo[4] + '/' + classInfo[5];
+                            var day = $('td:nth-child(3)', tr).text();
+                            var runTimes = start + ' - ' + finish;
+                            var location = $('td:nth-child(8)', tr).text();
+                            var duration = parseInt(durationInfo[0]);
+
+                            var ourData = [classType, day, runTimes, location, duration];
+
+                            // Ensure a store for our semester exists
+                            if(!semesterData[semester]) semesterData[semester] = [];
+
+                            // Store this class
+                            semesterData[semester].push(ourData);
+                        });
+                    });
+
+                    // Build result array
+                    var result = [];
+                    for(var semesterID in semesterData) {
+                        result.push({
+                            sem:semesterID,
+                            data:semesterData[semesterID]
+                        });
+                    }
+
+                    // Ensure directories exist:
+                    if(!fs.existsSync('static/timetable/'+yr)) {
+                        fs.mkdirSync('static/timetable/'+yr);
+                    }
+
+                    var fin = JSON.stringify({name:subjectTitle,code:code,year:yr,data:result});
+
+                    // Store the results:
+                    fs.writeFile('static/timetable/'+yr+'/'+code+'.json', fin, function(err) {
+                        if(err) {
+                            console.log(err);
+                        }
+                    });
+
+                    callback(fin);
+                } else {
+                    // No results found:
+                    if(errorCallback) {
+                        errorCallback('Failed to find subject!');
+                        return false;
+                    }
+                }
+            });
+        });
+    }
+
+    req.on('error', function(e) {
+        console.log(e);
+
+        if(errorCallback) {
+            errorCallback('request error');
+            return false;
+        }
+    });
+    req.end();
 }
 
 // Create the web server:
