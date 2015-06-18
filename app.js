@@ -232,8 +232,11 @@ function GetTimetable(code, yr, callback, errorCallback) {
                             // Ensure a store for our semester exists
                             if(!semesterData[semester]) semesterData[semester] = [];
 
-                            // Store this class
-                            semesterData[semester].push(ourData);
+                            if (!(classInfo[4].indexOf('Breakout')  >= 0)) {
+                                // Don't include breakout rooms on timetable
+                                // Store this class
+                                semesterData[semester].push(ourData);
+                            }
                         });
                     });
 
