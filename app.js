@@ -159,7 +159,7 @@ function GetTimetable(code, yr, callback, errorCallback) {
 
         var options = {
             hostname: 'sws.unimelb.edu.au',
-            path: '/2015/Reports/List.aspx?objects=' + code + '&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',
+            path: '/2016/Reports/List.aspx?objects=' + code + '&weeks=1-52&days=1-7&periods=1-56&template=module_by_group_list',
             method: 'GET'
         };
 
