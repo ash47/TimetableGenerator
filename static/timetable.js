@@ -1390,6 +1390,10 @@ function BuildAttendList(trMain) {
 var subjects = {};
 
 $(document).ready(function(){
+	// Update year to be latest year
+	var now = new Date();
+	$('#subjectYear').val(now.getFullYear());
+
 	// Start getting subjects:
 	$.getJSON('subjects.json', function(data) {
 		subjects = data;
