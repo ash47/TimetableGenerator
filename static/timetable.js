@@ -196,7 +196,7 @@ function GrabSubject(code, year) {
 			// Add color picker BG:
 			var td = $('<td></td>');
 			s.append(td);
-			var cs = $('<p style="background-image:url(/images/select.png);width:16px;height:16px;background-color:'+subjectcolors[data.name].bg+';">&nbsp;</p>');
+			var cs = $('<p style="background-image:url(/images/select.png);width:16px;height:16px;background-color:'+subjectcolors[data.name].bg+';"/ title="Subject colour">&nbsp;</p>');
 			td.append(cs);
 
 			// Color picker:
@@ -208,7 +208,7 @@ function GrabSubject(code, year) {
 			// Add color picker TXT:
 			var td = $('<td></td>');
 			s.append(td);
-			var cs2 = $('<p style="background-image:url(/images/select.png);width:16px;height:16px;background-color:'+subjectcolors[data.name].txt+';">&nbsp;</p>');
+			var cs2 = $('<p style="background-image:url(/images/select.png);width:16px;height:16px;background-color:'+subjectcolors[data.name].txt+';"/ title="Text colour">&nbsp;</p>');
 			td.append(cs2);
 
 			// Color picker:
@@ -953,7 +953,7 @@ function TtGenerate() {
 
 function ToggleButton(buttonStore, dataStore, varName, callback, args) {
 	// Add a toggle button:
-	var btn = $('<img src="icons/tick.png"/>');
+	var btn = $('<img src="icons/tick.png"/ title="Disclude">');
 	buttonStore.append(btn);
 
 	// Initially enabled:
@@ -983,8 +983,10 @@ function ToggleButton(buttonStore, dataStore, varName, callback, args) {
 		// Toggle icon:
 		if(dataStore.data(varName)) {
 			btn.attr('src', 'icons/tick.png');
+            btn.attr('title', 'Disclude');
 		} else {
 			btn.attr('src', 'icons/cross.png');
+            btn.attr('title', 'Include');
 		}
 	});
 
@@ -994,7 +996,7 @@ function ToggleButton(buttonStore, dataStore, varName, callback, args) {
 
 function AccendButton(buttonStore) {
 	// Add a toggle button:
-	var btn = $('<img src="icons/arrow_up.png"/ style="margin-right:8px;">');
+	var btn = $('<img src="icons/arrow_up.png"/ title="Ascending/descending" /style="margin-right:8px;">');
 	buttonStore.prepend(btn);
 
 	// Initially enabled:
@@ -1019,7 +1021,7 @@ function AccendButton(buttonStore) {
 
 function ExpandButton(buttonStore, toExpand) {
 	// Add an expand button:
-	var btn = $('<img src="icons/add.png"/>');
+	var btn = $('<img src="icons/add.png"/ title="Expand">');
 	buttonStore.append(btn);
 
 	btn.enabled = true;
@@ -1032,9 +1034,11 @@ function ExpandButton(buttonStore, toExpand) {
 		// Toggle icon:
 		if(btn.enabled) {
 			btn.attr('src', 'icons/add.png');
+            btn.attr('title', 'Expand');
 			toExpand.hide();
 		} else {
 			btn.attr('src', 'icons/minus.png');
+            btn.attr('title', 'Hide');
 			toExpand.show();
 		}
 	});
@@ -1042,7 +1046,7 @@ function ExpandButton(buttonStore, toExpand) {
 
 function StreamButton(buttonStore, dataStore, varName, varName2) {
 	// Add an expand button:
-	var btn = $('<img src="icons/lock_open.png"/>');
+	var btn = $('<img src="icons/lock_open.png"/ title="Select stream">');
 	buttonStore.append(btn);
 
 	// Create the steam selector:
@@ -1061,9 +1065,11 @@ function StreamButton(buttonStore, dataStore, varName, varName2) {
 		// Toggle icon:
 		if(dataStore.data(varName)) {
 			btn.attr('src', 'icons/lock.png');
+            btn.attr('title', 'Free');
 			toShow.show();
 		} else {
 			btn.attr('src', 'icons/lock_open.png');
+            btn.attr('title', 'Select stream');
 			toShow.hide();
 		}
 	});
@@ -1089,7 +1095,7 @@ function StreamButton(buttonStore, dataStore, varName, varName2) {
 
 function DeleteButton(buttonStore, toDelete) {
 	// Add an expand button:
-	var btn = $('<img src="icons/bin_closed.png"/>');
+	var btn = $('<img src="icons/bin_closed.png"/ title="Delete">');
 	buttonStore.append(btn);
 
 	// Allow button to toggle:
@@ -1500,7 +1506,7 @@ $(document).ready(function(){
 					var key = lookup[ls[i].stream];
 
 					if(!key && key != 0) {
-						$('#subjectError').html('<font color="red">Stream loop error '+ls[i].stream+'</font>');
+						$('#subjectError').html('<font color="red">Stream loop error. see subject handbook for more stream information. Change stream for class '+ls[i].stream+'</font>');
 						return false;
 					}
 
