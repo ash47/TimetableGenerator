@@ -9,6 +9,13 @@ Timetable Generator
  - Timetable data is cached, once downloaded, it won't ever update, if you want it to update, you need to delete the cache in `static/timetable`
  - The timetable generator will allow you to remove classes you can't / don't want to attend, it offers a printable version (Make sure to turn background colors on, otherwise it looks plain)
  - You can also filter timetables by finishing time, number of clashes, and many other things, you can change ascending and descending using the arrows on the filters.
+ 
+### Tips
+ -  To avoid crashes, disclude classes and select streams
+ -  Check the year and subject semester
+ -  Visit the handbook timetable for more information to avoid stream errors
+ -  Expand classes and remove times that are too early, late, or clash with other commitments
+ -  Sort the preferences and make them ascending/descending to personalise
 
 ### Setup
  - You need to INSTALL [node.js] (https://nodejs.org/en/) and the appropriate modules
